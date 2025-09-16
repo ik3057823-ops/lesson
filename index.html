@@ -1,296 +1,298 @@
-<!DOCTYPE html>
-<html lang="uz">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dars — Soddalashtirilgan</title>
+<!-- =========================
+  Lesson (Weebly-embed, namespaced)
+  ========================= -->
+<div id="lesson-embed">
   <style>
-    /* Typography: Inter (Bold headings, Regular body) */
     @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
 
-    :root{
-      --primary:#13176C;        /* brand accent */
-      --bg:#f7f7f9;             /* app background */
-      --surface:#ffffff;         /* panels */
-      --text:#1f2937;           /* main text */
-      --muted:#6b7280;          /* secondary */
-      --border:#e5e7eb;         /* subtle borders */
-      --shadow:0 1px 2px rgba(0,0,0,.04);
-      --radius:16px;
-      --sidebar:320px;
+    #lesson-embed {
+      --primary: #13176C;
+      --bg: #f7f7f9;
+      --surface: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --shadow: 0 1px 2px rgba(0,0,0,.04);
+      --radius: 16px;
+      --sidebar: 320px;      /* menu width */
+      --content-max: 980px;  /* centered content width */
+      font-family: "Inter", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
     }
-
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; background:var(--bg); color:var(--text);
-      font-family:"Inter",ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif;
-      line-height:1.65; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-    }
-    h1,h2{letter-spacing:-.01em}
-    h1{font-weight:700}
-    h2{font-weight:700; font-size:1.45rem; margin:0}
-    p{margin:0 0 14px 0}
-    a{color:inherit; text-decoration:none}
+    #lesson-embed * { box-sizing: border-box; font-family: inherit; }
 
     /* Layout */
-    .app{display:grid; grid-template-columns: var(--sidebar) 1fr; min-height:100dvh; transition:grid-template-columns .22s ease}
-    .sidebar{position:sticky; top:0; height:100dvh; overflow:auto; background:var(--surface); border-right:1px solid var(--border); transition:transform .22s ease}
-    .main{min-width:0; background:var(--surface)}
-
-    /* MENU CLOSE/OPEN (outside toggle controls this) */
-    body.menu-closed .app{grid-template-columns: 0 1fr}
-    body.menu-closed .sidebar{transform:translateX(-100%)}
-
-    /* Global (outside) toggle */
-    .global-toggle{
-      position:fixed; top:12px; left:12px; z-index:1000;
-      appearance:none; border:1px solid var(--border); background:#fff;
-      padding:8px 10px; border-radius:10px; cursor:pointer; box-shadow:var(--shadow);
-      display:inline-grid; place-items:center;
+    #lesson-embed .le-app {
+      display: grid;
+      grid-template-columns: var(--sidebar) 1fr;
+      min-height: 60vh;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      overflow: hidden;
     }
-    .global-toggle svg{width:18px; height:18px}
-
-    /* Sidebar simple list */
-    .s-back{padding:12px 16px; border-bottom:1px solid var(--border); background:#fff}
-    .link-btn{display:inline-flex; align-items:center; gap:8px; border:1px solid var(--border); padding:8px 12px; border-radius:10px; background:#fff; font-weight:600}
-    .s-head{padding:12px 16px; border-bottom:1px solid var(--border)}
-    .s-title{margin:0; font-weight:700; font-size:0.98rem; color:#374151}
-
-    .menu{padding:10px}
-    .mi{
-      display:grid; grid-template-columns:18px 1fr 14px; gap:10px; align-items:center;
-      padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:#fff; margin-bottom:8px;
-      min-height:38px;
+    #lesson-embed.le-closed .le-app { grid-template-columns: 0 1fr; }
+    #lesson-embed .le-sidebar {
+      position: relative;
+      border-right: 1px solid var(--border);
+      background: #fff;
+      min-width: 0;
+      transition: transform .22s ease;
     }
-    .mi .ico{display:grid; place-items:center; width:18px; height:18px; color:var(--muted)}
-    .mi .title{font-weight:500; font-size:0.95rem; line-height:1}
-    .mi .dot{width:12px; height:12px; border-radius:50%; border:2px solid var(--border); background:#fff}
-    .mi.active{border-left:4px solid var(--primary); padding-left:8px; background:#f5f7ff}
-    .mi.active .ico{color:var(--primary)}
-    .mi.active .dot{border-color:var(--primary)}
-    .mi.done .dot{background:var(--primary); border-color:var(--primary)}
-    .s-foot{padding:10px 16px; border-top:1px solid var(--border); color:var(--muted); font-size:.92rem}
+    #lesson-embed.le-closed .le-sidebar { transform: translateX(-100%); }
 
-    /* Separator line + space above lesson (with left-aligned back link) */
-    .returnline{border-top:1px solid var(--border); background:transparent}
-    .returnline .inner{max-width:1100px; margin:0 auto; padding:12px 18px}
+    /* Sidebar content */
+    #lesson-embed .le-s-head { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+    #lesson-embed .le-s-title { margin: 0; font-weight: 700; font-size: .98rem; color: #374151; }
+    #lesson-embed .le-menu { padding: 10px; }
+    #lesson-embed .le-mi {
+      display: grid; grid-template-columns: 18px 1fr 14px; gap: 10px; align-items: center;
+      padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border);
+      background: #fff; margin-bottom: 8px; min-height: 38px; text-decoration: none; color: inherit;
+    }
+    #lesson-embed .le-mi .ico { display: grid; place-items: center; width: 18px; height: 18px; color: var(--muted); }
+    #lesson-embed .le-mi .title { font-weight: 500; font-size: .95rem; line-height: 1; }
+    #lesson-embed .le-mi .dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border); background: #fff; }
+    #lesson-embed .le-mi.le-active { border-left: 4px solid var(--primary); padding-left: 8px; background: #f5f7ff; }
+    #lesson-embed .le-mi.le-active .ico { color: var(--primary); }
+    #lesson-embed .le-mi.le-active .dot { border-color: var(--primary); }
+    #lesson-embed .le-mi.le-done .dot { background: var(--primary); border-color: var(--primary); }
+    #lesson-embed .le-s-foot { padding: 10px 16px; border-top: 1px solid var(--border); color: var(--muted); font-size: .92rem; }
 
-    /* Top region in main column */
-    .top{padding:18px 28px 6px 28px; border-bottom:1px solid var(--border); background:var(--surface);}
-    .crumb{color:var(--muted); font-size:.95rem; margin:0 0 10px 0}
-    .title{font-size:clamp(24px,3vw,36px); margin:0 0 10px 0; font-weight:700}
-    .accent{height:4px; width:120px; background:var(--primary); border-radius:999px; margin:16px 0 0}
+    /* Content column */
+    #lesson-embed .le-main { background: #fff; }
+    #lesson-embed .le-container { max-width: var(--content-max); margin: 0 auto; padding: 0 clamp(16px, 4vw, 32px); }
+    #lesson-embed .le-top { border-bottom: 1px solid var(--border); padding: 18px 0 8px; }
+    #lesson-embed .le-crumb { color: var(--muted); font-size: .95rem; margin: 0 0 8px; }
+    #lesson-embed .le-title { margin: 0 0 10px; font-weight: 700; letter-spacing: -.01em; font-size: clamp(24px, 3vw, 36px); }
+    #lesson-embed .le-accent { height: 4px; width: 120px; background: var(--primary); border-radius: 999px; margin: 16px 0 0; }
 
-    /* Content blocks */
-    .section{padding:24px 28px; border-top:1px solid var(--border)}
-    .section h2{margin-bottom:10px}
-    .section p{max-width:70ch}
-    .lead{color:var(--muted)}
+    #lesson-embed .le-section { border-top: 1px solid var(--border); padding: 24px 0; }
+    #lesson-embed .le-section h2 { margin: 0 0 10px; font-weight: 700; font-size: 1.45rem; }
+    #lesson-embed .le-section p { margin: 0 0 12px; max-width: 70ch; color: #333; }
+    #lesson-embed .le-lead { color: var(--muted); }
 
-    /* Bottom nav */
-    .bottom{position:sticky; bottom:0; background:rgba(255,255,255,.98); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 18px}
-    .btn{display:inline-flex; align-items:center; gap:8px; border:1px solid var(--border); padding:10px 14px; border-radius:999px; background:#fff; color:var(--text); font-weight:600}
-    .btn.primary{border-color:var(--primary); background:var(--primary); color:#fff}
+    #lesson-embed .le-bottom {
+      position: sticky; bottom: 0; background: rgba(255,255,255,.98);
+      border-top: 1px solid var(--border);
+    }
+    #lesson-embed .le-bottom-inner {
+      max-width: var(--content-max); margin: 0 auto; padding: 12px clamp(16px, 4vw, 32px);
+      display: flex; justify-content: space-between; gap: 10px;
+    }
+    #lesson-embed .le-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      border: 1px solid var(--border); padding: 10px 14px; border-radius: 999px;
+      background: #fff; color: var(--text); font-weight: 600; text-decoration: none;
+    }
+    #lesson-embed .le-btn.le-primary { border-color: var(--primary); background: var(--primary); color: #fff; }
 
-    /* Minimal responsiveness */
-    @media (max-width: 960px){
-      .app{grid-template-columns:1fr}
-      .sidebar{position:fixed; left:0; top:0; width:var(--sidebar); height:100dvh; z-index:10}
-      body.menu-closed .app{grid-template-columns:1fr}
-      .returnline .inner{padding:12px 14px}
-      .top{padding:16px 18px 4px}
-      .section{padding:20px 18px}
+    /* Border toggle (always reachable) */
+    #lesson-embed .le-toggle {
+      position: fixed; top: 16px; left: 0;  /* JS updates 'left' to sit exactly on the border */
+      z-index: 9999;
+      appearance: none; border: 1px solid var(--border); background: #fff;
+      padding: 8px 10px; border-radius: 10px; cursor: pointer; box-shadow: var(--shadow);
+      display: inline-grid; place-items: center;
+    }
+    #lesson-embed .le-toggle svg { width: 18px; height: 18px; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      #lesson-embed .le-app { grid-template-columns: 1fr; }
+      #lesson-embed .le-sidebar { position: fixed; left: 0; top: 0; width: var(--sidebar); height: 100dvh; z-index: 10; }
+      #lesson-embed.le-closed .le-app { grid-template-columns: 1fr; }
     }
   </style>
-</head>
-<body>
 
-  <!-- Always-visible (outside) menu toggle -->
-  <button class="global-toggle" id="globalToggle" aria-label="Menyuni ochish/yopish" aria-expanded="true">
-    <!-- panel icon initially (menu open) -->
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M9 4v16"></path>
-    </svg>
-  </button>
-
-  <div class="app">
-    <!-- LEFT: sidebar -->
-    <aside class="sidebar" aria-label="Dars menyusi" id="sidebar">
-      <!-- Back button ABOVE the menu -->
-      <div class="s-back">
-        <a class="link-btn" href="https://t4uzb.weebly.com/kurs.html" aria-label="Darslarga qaytish">
-          <!-- back icon -->
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          Darslarga qaytish
-        </a>
-      </div>
-
-      <div class="s-head">
-        <p class="s-title">Dars bo‘limlari</p>
-      </div>
-
-      <nav class="menu" aria-label="Bo‘limlar ro‘yxati" id="menu">
-        <a class="mi active" href="#s1" data-target="s1">
+  <div class="le-app">
+    <aside class="le-sidebar" id="le-sidebar" aria-label="Dars menyusi">
+      <div class="le-s-head"><p class="le-s-title">Dars bo‘limlari</p></div>
+      <nav class="le-menu" id="le-menu" aria-label="Bo‘limlar ro‘yxati">
+        <a class="le-mi le-active" href="#le-s1" data-target="le-s1">
           <span class="ico" aria-hidden="true">
-            <!-- intro icon -->
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13"></path><path d="M3 6h.01M3 12h.01M3 18h.01"></path></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 6h13M8 12h13M8 18h13"></path><path d="M3 6h.01M3 12h.01M3 18h.01"></path>
+            </svg>
           </span>
           <span class="title">Kirish</span>
           <span class="dot" aria-hidden="true"></span>
         </a>
-        <a class="mi" href="#s2" data-target="s2">
+
+        <a class="le-mi" href="#le-s2" data-target="le-s2">
           <span class="ico" aria-hidden="true">
-            <!-- text icon -->
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"></path><path d="M8 8h8"></path></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16v16H4z"></path><path d="M8 8h8"></path>
+            </svg>
           </span>
           <span class="title">Asosiy g‘oyalar</span>
           <span class="dot" aria-hidden="true"></span>
         </a>
-        <a class="mi" href="#s3" data-target="s3">
+
+        <a class="le-mi" href="#le-s3" data-target="le-s3">
           <span class="ico" aria-hidden="true">
-            <!-- video icon -->
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="3"></rect><polygon points="10,9 16,12 10,15"></polygon></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="5" width="20" height="14" rx="3"></rect><polygon points="10,9 16,12 10,15"></polygon>
+            </svg>
           </span>
           <span class="title">Ko‘rish: Qisqa video</span>
           <span class="dot" aria-hidden="true"></span>
         </a>
-        <a class="mi" href="#s4" data-target="s4">
+
+        <a class="le-mi" href="#le-s4" data-target="le-s4">
           <span class="ico" aria-hidden="true">
-            <!-- quiz icon -->
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 7h6M9 11h6M9 15h6"></path><rect x="3" y="4" width="18" height="16" rx="2"></rect></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 7h6M9 11h6M9 15h6"></path><rect x="3" y="4" width="18" height="16" rx="2"></rect>
+            </svg>
           </span>
           <span class="title">Mini-test</span>
           <span class="dot" aria-hidden="true"></span>
         </a>
-        <a class="mi" href="#s5" data-target="s5">
+
+        <a class="le-mi" href="#le-s5" data-target="le-s5">
           <span class="ico" aria-hidden="true">
-            <!-- resource icon -->
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M20 22H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20z"></path></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M20 22H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20z"></path>
+            </svg>
           </span>
           <span class="title">Qo‘shimcha manbalar</span>
           <span class="dot" aria-hidden="true"></span>
         </a>
       </nav>
-
-      <div class="s-foot" id="progressText">0% tugallandi</div>
+      <div class="le-s-foot" id="le-progress">0% tugallandi</div>
     </aside>
 
-    <!-- RIGHT: main pane -->
-    <main class="main">
-      <!-- Separator line + left-aligned back link above lesson -->
-      <div class="returnline">
-        <div class="inner">
-          <a class="link-btn" href="https://t4uzb.weebly.com/kurs.html" aria-label="Darslarga qaytish">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-            Darslarga qaytish
-          </a>
-        </div>
+    <main class="le-main" aria-label="Dars mazmuni">
+      <div class="le-container le-top">
+        <p class="le-crumb">Dars 3</p>
+        <h1 class="le-title">Baholash va fikr bildirishning mohiyati</h1>
+        <div class="le-accent" aria-hidden="true"></div>
       </div>
 
-      <div class="top">
-        <p class="crumb">Dars 3</p>
-        <h1 class="title">Baholash va fikr bildirishning mohiyati</h1>
-        <div class="accent" aria-hidden="true"></div>
+      <div class="le-container le-section" id="le-s1" tabindex="-1" aria-labelledby="le-h1">
+        <h2 id="le-h1">Kirish</h2>
+        <p class="le-lead">Onlayn ta’limda baholash faqat yakuniy imtihon emas, balki o‘quv jarayonini qo‘llab-quvvatlaydigan uzluksiz jarayondir.</p>
       </div>
 
-      <section id="s1" class="section" aria-labelledby="h-s1">
-        <h2 id="h-s1">Kirish</h2>
-        <p class="lead">Onlayn ta’limda baholash faqat yakuniy imtihon emas, balki o‘quv jarayonini qo‘llab-quvvatlaydigan uzluksiz jarayondir.</p>
-      </section>
-
-      <section id="s2" class="section" aria-labelledby="h-s2">
-        <h2 id="h-s2">Asosiy g‘oyalar</h2>
+      <div class="le-container le-section" id="le-s2" tabindex="-1" aria-labelledby="le-h2">
+        <h2 id="le-h2">Asosiy g‘oyalar</h2>
         <p><strong>Formatif baholash</strong> o‘quvchilarni faol ishtirok etishga undaydi va o‘sish bo‘yicha tezkor signal beradi. <strong>Summativ baholash</strong> esa natijani qayd etadi; ikkalasi bir-birini to‘ldiradi.</p>
-      </section>
+      </div>
 
-      <section id="s3" class="section" aria-labelledby="h-s3">
-        <h2 id="h-s3">Ko‘rish: Qisqa video</h2>
-        <p class="lead">Quyidagi videoni ko‘ring va qay darajada formatif yondashuv qo‘llanilganini kuzating.</p>
+      <div class="le-container le-section" id="le-s3" tabindex="-1" aria-labelledby="le-h3">
+        <h2 id="le-h3">Ko‘rish: Qisqa video</h2>
+        <p class="le-lead">Quyidagi videoni ko‘ring va qay darajada formatif yondashuv qo‘llanilganini kuzating.</p>
         <div style="margin-top:12px; border:1px solid var(--border); border-radius:12px; overflow:hidden; background:#000;">
-          <iframe style="display:block; width:100%; aspect-ratio:16/9; border:0" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Baholash video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          <iframe style="display:block; width:100%; aspect-ratio:16/9; border:0"
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+            title="Baholash video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen></iframe>
         </div>
-      </section>
+      </div>
 
-      <section id="s4" class="section" aria-labelledby="h-s4">
-        <h2 id="h-s4">Mini-test</h2>
+      <div class="le-container le-section" id="le-s4" tabindex="-1" aria-labelledby="le-h4">
+        <h2 id="le-h4">Mini-test</h2>
         <ul>
           <li>Formatif va summativ baholash o‘rtasidagi farq nima?</li>
           <li>Formatif fikr bildirishning ikki tamoyilini yozing.</li>
           <li>Onlayn darsda adolatni ta’minlash uchun nimalarga e’tibor berish kerak?</li>
         </ul>
-      </section>
+      </div>
 
-      <section id="s5" class="section" aria-labelledby="h-s5">
-        <h2 id="h-s5">Qo‘shimcha manbalar</h2>
-        <p class="lead">Tavsiya etilgan maqolalar va shablonlar:</p>
+      <div class="le-container le-section" id="le-s5" tabindex="-1" aria-labelledby="le-h5">
+        <h2 id="le-h5">Qo‘shimcha manbalar</h2>
+        <p class="le-lead">Tavsiya etilgan maqolalar va shablonlar:</p>
         <ul>
           <li>Rubrikalar shabloni (PDF)</li>
           <li>Formatif fikr bildirish misollari (DOCX)</li>
           <li>Baholash mezonlari bo‘yicha qo‘llanma (VEB)</li>
         </ul>
-      </section>
+      </div>
 
-      <div class="bottom">
-        <button class="btn" id="prevBtn" type="button">← Oldingi</button>
-        <button class="btn primary" id="completeBtn" type="button">✓ Tugallandi</button>
-        <button class="btn" id="nextBtn" type="button">Keyingi →</button>
+      <div class="le-bottom">
+        <div class="le-bottom-inner">
+          <button class="le-btn" id="le-prev" type="button">← Oldingi</button>
+          <button class="le-btn le-primary" id="le-done" type="button">✓ Tugallandi</button>
+          <button class="le-btn" id="le-next" type="button">Keyingi →</button>
+        </div>
       </div>
     </main>
   </div>
 
+  <!-- Toggle sitting on the menu/content border -->
+  <button class="le-toggle" id="le-toggle" aria-label="Menyuni ochish/yopish" aria-expanded="true"></button>
+
   <script>
     (function(){
-      const links=[...document.querySelectorAll('.menu .mi')];
-      const sections=links.map(a=>document.getElementById(a.dataset.target));
-      const progressText=document.getElementById('progressText');
-      const completeBtn=document.getElementById('completeBtn');
-      const prevBtn=document.getElementById('prevBtn');
-      const nextBtn=document.getElementById('nextBtn');
-      const globalToggle=document.getElementById('globalToggle');
+      const root = document.getElementById('lesson-embed');
+      const toggle = document.getElementById('le-toggle');
+      const sidebar = document.getElementById('le-sidebar');
+      const progress = document.getElementById('le-progress');
+      const links = Array.from(document.querySelectorAll('#lesson-embed .le-menu .le-mi'));
+      const prevBtn = document.getElementById('le-prev');
+      const nextBtn = document.getElementById('le-next');
+      const doneBtn = document.getElementById('le-done');
 
-      function setActive(id){ links.forEach(a=>a.classList.toggle('active', a.dataset.target===id)); }
+      function setActive(id){
+        links.forEach(a => a.classList.toggle('le-active', a.getAttribute('data-target') === id));
+      }
+      function updatePager(){
+        const i = links.findIndex(a => a.classList.contains('le-active'));
+        prevBtn.disabled = i <= 0;
+        nextBtn.disabled = i >= links.length - 1;
+      }
       function updateProgress(){
-        const done=links.filter(a=>a.classList.contains('done')).length;
-        const total=links.length; const pct=Math.round(done/total*100);
-        progressText.textContent=`${pct}% tugallandi`;
+        const done = links.filter(a=>a.classList.contains('le-done')).length;
+        const pct = Math.round(done / links.length * 100);
+        progress.textContent = pct + '% tugallandi';
       }
 
-      // click navigation
-      links.forEach((a)=>a.addEventListener('click',e=>{
-        const id=a.dataset.target; const el=document.getElementById(id);
-        if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'}); setActive(id); updatePager(); }
-      }));
-
-      // scroll spy
-      const obs=new IntersectionObserver((ents)=>{
-        const hit=ents.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-        if(hit){ setActive(hit.target.id); updatePager(); }
-      },{threshold:[0.6], rootMargin:'-80px 0px 0px 0px'});
-      sections.forEach(s=>s && obs.observe(s));
-
-      // complete toggles current item as done
-      completeBtn.addEventListener('click',()=>{
-        const active=links.find(a=>a.classList.contains('active'));
-        if(active){ active.classList.toggle('done'); updateProgress(); }
+      // Smooth scroll on click
+      links.forEach(a=>{
+        a.addEventListener('click', e=>{
+          const id = a.getAttribute('data-target');
+          const el = document.getElementById(id);
+          if(el){
+            e.preventDefault();
+            el.scrollIntoView({behavior:'smooth', block:'start'});
+            setActive(id);
+            updatePager();
+          }
+        });
       });
 
-      // simple pager
-      function indexActive(){ return links.findIndex(a=>a.classList.contains('active')); }
-      function updatePager(){
-        const i=indexActive();
-        prevBtn.disabled = i<=0; nextBtn.disabled = i>=links.length-1;
-      }
-      prevBtn.addEventListener('click',()=>{ const i=indexActive(); if(i>0) links[i-1].click(); });
-      nextBtn.addEventListener('click',()=>{ const i=indexActive(); if(i<links.length-1) links[i+1].click(); });
+      // Scroll spy
+      const sections = links.map(a => document.getElementById(a.getAttribute('data-target'))).filter(Boolean);
+      const obs = new IntersectionObserver(entries=>{
+        const hit = entries.filter(en => en.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+        if(hit){ setActive(hit.target.id); updatePager(); }
+      }, {threshold:[0.6], rootMargin:'-80px 0px 0px 0px'});
+      sections.forEach(s=>obs.observe(s));
 
-      updateProgress(); updatePager();
+      // Done toggle
+      doneBtn.addEventListener('click', ()=>{
+        const active = links.find(a=>a.classList.contains('le-active'));
+        if(active){ active.classList.toggle('le-done'); updateProgress(); }
+      });
+      prevBtn.addEventListener('click', ()=>{
+        const i = links.findIndex(a=>a.classList.contains('le-active'));
+        if(i>0) links[i-1].click();
+      });
+      nextBtn.addEventListener('click', ()=>{
+        const i = links.findIndex(a=>a.classList.contains('le-active'));
+        if(i<links.length-1) links[i+1].click();
+      });
 
-      // Outside toggle for opening/closing the menu
+      // Toggle icon + position on the border
       function setToggleIcon(){
-        const open = !document.body.classList.contains('menu-closed');
-        globalToggle.setAttribute('aria-expanded', String(open));
-        globalToggle.innerHTML = open
+        const open = !root.classList.contains('le-closed');
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.innerHTML = open
           ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                <rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M9 4v16"></path>
              </svg>`
@@ -300,12 +302,27 @@
                <line x1="3" y1="18" x2="21" y2="18"></line>
              </svg>`;
       }
-      globalToggle.addEventListener('click',()=>{
-        document.body.classList.toggle('menu-closed');
+      function placeToggle(){
+        // Position the toggle exactly at the border between sidebar and content.
+        const rect = root.getBoundingClientRect();
+        const open = !root.classList.contains('le-closed');
+        const sidebarWidth = open ? parseInt(getComputedStyle(root).getPropertyValue('--sidebar')) : 0;
+        const left = rect.left + window.scrollX + sidebarWidth - 12; // -12 to sit over the border
+        toggle.style.left = left + 'px';
+      }
+      toggle.addEventListener('click', ()=>{
+        root.classList.toggle('le-closed');
         setToggleIcon();
+        placeToggle();
       });
+      window.addEventListener('resize', placeToggle);
+      window.addEventListener('scroll', placeToggle, {passive:true});
+
+      // init
       setToggleIcon();
+      placeToggle();
+      updatePager();
+      updateProgress();
     })();
   </script>
-</body>
-</html>
+</div>
