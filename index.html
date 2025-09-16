@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title=Tinglash – Dars sahifasi></title>
+  <title>Dars — Soddalashtirilgan</title>
   <style>
     /* Typography: Inter (Bold headings, Regular body) */
     @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
@@ -11,9 +11,9 @@
     :root{
       --primary:#13176C;        /* brand accent */
       --bg:#f7f7f9;             /* app background */
-      --surface:#ffffff;         /* cards/panels */
+      --surface:#ffffff;         /* panels */
       --text:#1f2937;           /* main text */
-      --muted:#6b7280;          /* secondary text */
+      --muted:#6b7280;          /* secondary */
       --border:#e5e7eb;         /* subtle borders */
       --shadow:0 1px 2px rgba(0,0,0,.04);
       --radius:16px;
@@ -29,107 +29,133 @@
     }
     h1,h2{letter-spacing:-.01em}
     h1{font-weight:700}
-    h2{font-weight:700; font-size:1.6rem; margin:0}
+    h2{font-weight:700; font-size:1.45rem; margin:0}
     p{margin:0 0 14px 0}
+    a{color:inherit; text-decoration:none}
 
     /* Layout */
-    .app{display:grid; grid-template-columns: var(--sidebar) 1fr; min-height:100dvh}
-    .sidebar{position:sticky; top:0; height:100dvh; overflow:auto; background:var(--surface); border-right:1px solid var(--border)}
+    .app{display:grid; grid-template-columns: var(--sidebar) 1fr; min-height:100dvh; transition:grid-template-columns .22s ease}
+    .sidebar{position:sticky; top:0; height:100dvh; overflow:auto; background:var(--surface); border-right:1px solid var(--border); transition:transform .22s ease}
     .main{min-width:0; background:var(--surface)}
 
-    /* Sidebar cover */
-    .cover{
-      position:relative; height:220px; overflow:hidden; border-bottom:1px solid var(--border);
-      background:url("https://raw.githubusercontent.com/ik3057823-ops/images-5/refs/heads/main/image1.jpg") center/cover no-repeat;
-    }
-    .cover::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.45))}
-    .cover-inner{
-      position:absolute; inset:0; padding:18px; display:flex; flex-direction:column; justify-content:flex-end; gap:10px; color:#fff;
-    }
-    .cover h3{margin:0; font-size:1.35rem; font-weight:700}
-    .meter{display:flex; align-items:center; gap:8px}
-    .ring{width:16px; height:16px; border-radius:999px; border:3px solid rgba(255,255,255,.4); position:relative}
-    .meter span{font-size:.88rem; opacity:.95}
+    /* MENU CLOSE/OPEN (outside toggle controls this) */
+    body.menu-closed .app{grid-template-columns: 0 1fr}
+    body.menu-closed .sidebar{transform:translateX(-100%)}
 
-    /* Sidebar list */
+    /* Global (outside) toggle */
+    .global-toggle{
+      position:fixed; top:12px; left:12px; z-index:1000;
+      appearance:none; border:1px solid var(--border); background:#fff;
+      padding:8px 10px; border-radius:10px; cursor:pointer; box-shadow:var(--shadow);
+      display:inline-grid; place-items:center;
+    }
+    .global-toggle svg{width:18px; height:18px}
+
+    /* Sidebar simple list */
+    .s-back{padding:12px 16px; border-bottom:1px solid var(--border); background:#fff}
+    .link-btn{display:inline-flex; align-items:center; gap:8px; border:1px solid var(--border); padding:8px 12px; border-radius:10px; background:#fff; font-weight:600}
+    .s-head{padding:12px 16px; border-bottom:1px solid var(--border)}
+    .s-title{margin:0; font-weight:700; font-size:0.98rem; color:#374151}
+
     .menu{padding:10px}
     .mi{
-      display:grid; grid-template-columns:22px 1fr 20px; gap:10px; align-items:center;
-      padding:12px; border-radius:12px; border:1px solid var(--border); background:#fff; margin-bottom:8px;
+      display:grid; grid-template-columns:18px 1fr 14px; gap:10px; align-items:center;
+      padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:#fff; margin-bottom:8px;
+      min-height:38px;
     }
-    .mi .ico{display:grid; place-items:center; width:22px; height:22px; color:var(--muted)}
-    .mi .title{font-weight:500}
-    .mi .dot{width:16px; height:16px; border-radius:50%; border:2px solid var(--border); background:#fff}
+    .mi .ico{display:grid; place-items:center; width:18px; height:18px; color:var(--muted)}
+    .mi .title{font-weight:500; font-size:0.95rem; line-height:1}
+    .mi .dot{width:12px; height:12px; border-radius:50%; border:2px solid var(--border); background:#fff}
     .mi.active{border-left:4px solid var(--primary); padding-left:8px; background:#f5f7ff}
     .mi.active .ico{color:var(--primary)}
     .mi.active .dot{border-color:var(--primary)}
+    .mi.done .dot{background:var(--primary); border-color:var(--primary)}
+    .s-foot{padding:10px 16px; border-top:1px solid var(--border); color:var(--muted); font-size:.92rem}
 
-    /* Top region in main column (like Rise) */
-    .top{padding:26px 28px 6px 28px; border-bottom:1px solid var(--border); background:var(--surface)}
+    /* Separator line + space above lesson (with left-aligned back link) */
+    .returnline{border-top:1px solid var(--border); background:transparent}
+    .returnline .inner{max-width:1100px; margin:0 auto; padding:12px 18px}
+
+    /* Top region in main column */
+    .top{padding:18px 28px 6px 28px; border-bottom:1px solid var(--border); background:var(--surface);}
     .crumb{color:var(--muted); font-size:.95rem; margin:0 0 10px 0}
-    .title{font-size:clamp(28px,4vw,44px); margin:0 0 10px 0; font-weight:700}
-    .byline{display:flex; align-items:center; gap:10px; color:var(--muted); font-size:.95rem}
-    .avatar{width:28px; height:28px; border-radius:999px; background:#e2e8f0}
+    .title{font-size:clamp(24px,3vw,36px); margin:0 0 10px 0; font-weight:700}
     .accent{height:4px; width:120px; background:var(--primary); border-radius:999px; margin:16px 0 0}
 
     /* Content blocks */
-    .section{padding:28px; border-top:1px solid var(--border)}
+    .section{padding:24px 28px; border-top:1px solid var(--border)}
     .section h2{margin-bottom:10px}
-    .section p{max-width:70ch; color:#333}
-    .section .lead{color:var(--muted)}
+    .section p{max-width:70ch}
+    .lead{color:var(--muted)}
+
+    /* Bottom nav */
+    .bottom{position:sticky; bottom:0; background:rgba(255,255,255,.98); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:10px; padding:12px 18px}
+    .btn{display:inline-flex; align-items:center; gap:8px; border:1px solid var(--border); padding:10px 14px; border-radius:999px; background:#fff; color:var(--text); font-weight:600}
+    .btn.primary{border-color:var(--primary); background:var(--primary); color:#fff}
 
     /* Minimal responsiveness */
     @media (max-width: 960px){
-      .app{grid-template-columns: 1fr}
-      .sidebar{position:relative; height:auto}
-      .top{padding:22px 18px 4px}
-      .section{padding:22px 18px}
+      .app{grid-template-columns:1fr}
+      .sidebar{position:fixed; left:0; top:0; width:var(--sidebar); height:100dvh; z-index:10}
+      body.menu-closed .app{grid-template-columns:1fr}
+      .returnline .inner{padding:12px 14px}
+      .top{padding:16px 18px 4px}
+      .section{padding:20px 18px}
     }
   </style>
 </head>
 <body>
+
+  <!-- Always-visible (outside) menu toggle -->
+  <button class="global-toggle" id="globalToggle" aria-label="Menyuni ochish/yopish" aria-expanded="true">
+    <!-- panel icon initially (menu open) -->
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M9 4v16"></path>
+    </svg>
+  </button>
+
   <div class="app">
-    <!-- LEFT: simplified Rise-like sidebar -->
-    <aside class="sidebar" aria-label="Dars menyusi">
-      <div class="cover" role="img" aria-label="Kurs muqovasi">
-        <div class="cover-inner">
-          <h3>Tinglash bo‘yicha samarali yondashuv</h3>
-          <div class="meter">
-            <span class="ring" aria-hidden="true"></span>
-            <span>0% TUGALLANDI</span>
-          </div>
-        </div>
+    <!-- LEFT: sidebar -->
+    <aside class="sidebar" aria-label="Dars menyusi" id="sidebar">
+      <!-- Back button ABOVE the menu -->
+      <div class="s-back">
+        <a class="link-btn" href="https://t4uzb.weebly.com/kurs.html" aria-label="Darslarga qaytish">
+          <!-- back icon -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          Darslarga qaytish
+        </a>
       </div>
 
-      <nav class="menu" aria-label="Bo‘limlar">
-        <a class="mi active" href="#s1">
+      <div class="s-head">
+        <p class="s-title">Dars bo‘limlari</p>
+      </div>
+
+      <nav class="menu" aria-label="Bo‘limlar ro‘yxati" id="menu">
+        <a class="mi active" href="#s1" data-target="s1">
           <span class="ico" aria-hidden="true">
-            <!-- list icon -->
+            <!-- intro icon -->
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h13M8 12h13M8 18h13"></path><path d="M3 6h.01M3 12h.01M3 18h.01"></path></svg>
           </span>
-          <span class="title">Kirish: Faqat so‘zlardan ko‘proq</span>
+          <span class="title">Kirish</span>
           <span class="dot" aria-hidden="true"></span>
         </a>
-
-        <a class="mi" href="#s2">
+        <a class="mi" href="#s2" data-target="s2">
           <span class="ico" aria-hidden="true">
             <!-- text icon -->
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"></path><path d="M8 8h8"></path></svg>
           </span>
-          <span class="title">Noverbal aloqa roli</span>
+          <span class="title">Asosiy g‘oyalar</span>
           <span class="dot" aria-hidden="true"></span>
         </a>
-
-        <a class="mi" href="#s3">
+        <a class="mi" href="#s3" data-target="s3">
           <span class="ico" aria-hidden="true">
             <!-- video icon -->
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="3"></rect><polygon points="10,9 16,12 10,15"></polygon></svg>
           </span>
-          <span class="title">Kuzatish: qisqa video</span>
+          <span class="title">Ko‘rish: Qisqa video</span>
           <span class="dot" aria-hidden="true"></span>
         </a>
-
-        <a class="mi" href="#s4">
+        <a class="mi" href="#s4" data-target="s4">
           <span class="ico" aria-hidden="true">
             <!-- quiz icon -->
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 7h6M9 11h6M9 15h6"></path><rect x="3" y="4" width="18" height="16" rx="2"></rect></svg>
@@ -137,73 +163,148 @@
           <span class="title">Mini-test</span>
           <span class="dot" aria-hidden="true"></span>
         </a>
+        <a class="mi" href="#s5" data-target="s5">
+          <span class="ico" aria-hidden="true">
+            <!-- resource icon -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M20 22H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20z"></path></svg>
+          </span>
+          <span class="title">Qo‘shimcha manbalar</span>
+          <span class="dot" aria-hidden="true"></span>
+        </a>
       </nav>
+
+      <div class="s-foot" id="progressText">0% tugallandi</div>
     </aside>
 
-    <!-- RIGHT: roomy reading pane -->
+    <!-- RIGHT: main pane -->
     <main class="main">
-      <div class="top">
-        <p class="crumb">3 / 11</p>
-        <h1 class="title">So‘zlardan ko‘prog‘ini tinglash</h1>
-        <div class="byline">
-          <span class="avatar" aria-hidden="true"></span>
-          <span>Muallif: <strong>Kate Murphy</strong></span>
+      <!-- Separator line + left-aligned back link above lesson -->
+      <div class="returnline">
+        <div class="inner">
+          <a class="link-btn" href="https://t4uzb.weebly.com/kurs.html" aria-label="Darslarga qaytish">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            Darslarga qaytish
+          </a>
         </div>
+      </div>
+
+      <div class="top">
+        <p class="crumb">Dars 3</p>
+        <h1 class="title">Baholash va fikr bildirishning mohiyati</h1>
         <div class="accent" aria-hidden="true"></div>
       </div>
 
       <section id="s1" class="section" aria-labelledby="h-s1">
-        <h2 id="h-s1">Darsga kirish</h2>
-        <p class="lead">Odamlar ko‘pincha so‘zlarni eshitadi, ammo noverbal signallarni e’tiborsiz qoldiradi. Ushbu darsda tinglashning kengroq, mazmunli ko‘lamini ko‘rib chiqamiz.</p>
+        <h2 id="h-s1">Kirish</h2>
+        <p class="lead">Onlayn ta’limda baholash faqat yakuniy imtihon emas, balki o‘quv jarayonini qo‘llab-quvvatlaydigan uzluksiz jarayondir.</p>
       </section>
 
       <section id="s2" class="section" aria-labelledby="h-s2">
-        <h2 id="h-s2">Noverbal aloqaning o‘rni</h2>
-        <p>Tasavvur qiling, hamkasbingiz sahnaga chiqish arafasida. U «hammasi joyida» deydi, ammo qo‘llari titraydi, nafasi tezlashadi. So‘zlar bir narsa, tana tili boshqacha gapiradi.</p>
-        <p>Yuz ifodasi, ovoz ohangi, tana holati – bular his-tuyg‘u va niyatning kuchli ko‘rsatkichlari. Ta’limda ham, kundalik muloqotda ham ularni inobatga olish muhim.</p>
+        <h2 id="h-s2">Asosiy g‘oyalar</h2>
+        <p><strong>Formatif baholash</strong> o‘quvchilarni faol ishtirok etishga undaydi va o‘sish bo‘yicha tezkor signal beradi. <strong>Summativ baholash</strong> esa natijani qayd etadi; ikkalasi bir-birini to‘ldiradi.</p>
       </section>
 
       <section id="s3" class="section" aria-labelledby="h-s3">
-        <h2 id="h-s3">Kuzatish: VIDEO</h2>
-        <p class="lead">Quyidagi video orqali suhbat jarayonidagi noverbal signallarni kuzating.</p>
+        <h2 id="h-s3">Ko‘rish: Qisqa video</h2>
+        <p class="lead">Quyidagi videoni ko‘ring va qay darajada formatif yondashuv qo‘llanilganini kuzating.</p>
         <div style="margin-top:12px; border:1px solid var(--border); border-radius:12px; overflow:hidden; background:#000;">
-          <iframe
-            style="display:block; width:100%; aspect-ratio:16/9; border:0"
-            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-            title="Listening – example"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen></iframe>
+          <iframe style="display:block; width:100%; aspect-ratio:16/9; border:0" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Baholash video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
       </section>
 
       <section id="s4" class="section" aria-labelledby="h-s4">
         <h2 id="h-s4">Mini-test</h2>
-        <p class="lead">Quyidagi savollar orqali tushunchalarni mustahkamlang.</p>
         <ul>
-          <li>Noverbal signalga uchta misol keltiring.</li>
-          <li>Qachon so‘zdan ko‘ra ohang muhim bo‘ladi?</li>
-          <li>Tinglovchi sifatida qanday savollar ochiqlik kiritadi?</li>
+          <li>Formatif va summativ baholash o‘rtasidagi farq nima?</li>
+          <li>Formatif fikr bildirishning ikki tamoyilini yozing.</li>
+          <li>Onlayn darsda adolatni ta’minlash uchun nimalarga e’tibor berish kerak?</li>
         </ul>
       </section>
+
+      <section id="s5" class="section" aria-labelledby="h-s5">
+        <h2 id="h-s5">Qo‘shimcha manbalar</h2>
+        <p class="lead">Tavsiya etilgan maqolalar va shablonlar:</p>
+        <ul>
+          <li>Rubrikalar shabloni (PDF)</li>
+          <li>Formatif fikr bildirish misollari (DOCX)</li>
+          <li>Baholash mezonlari bo‘yicha qo‘llanma (VEB)</li>
+        </ul>
+      </section>
+
+      <div class="bottom">
+        <button class="btn" id="prevBtn" type="button">← Oldingi</button>
+        <button class="btn primary" id="completeBtn" type="button">✓ Tugallandi</button>
+        <button class="btn" id="nextBtn" type="button">Keyingi →</button>
+      </div>
     </main>
   </div>
 
   <script>
-    // Tiny enhancement: highlight active menu item on click/scroll (keeps code simple)
     (function(){
-      const links=[...document.querySelectorAll(".menu .mi")];
-      const ids=links.map(a=>a.getAttribute("href").slice(1));
-      function setActive(id){
-        links.forEach(a=>a.classList.toggle("active", a.getAttribute("href")==="#"+id));
+      const links=[...document.querySelectorAll('.menu .mi')];
+      const sections=links.map(a=>document.getElementById(a.dataset.target));
+      const progressText=document.getElementById('progressText');
+      const completeBtn=document.getElementById('completeBtn');
+      const prevBtn=document.getElementById('prevBtn');
+      const nextBtn=document.getElementById('nextBtn');
+      const globalToggle=document.getElementById('globalToggle');
+
+      function setActive(id){ links.forEach(a=>a.classList.toggle('active', a.dataset.target===id)); }
+      function updateProgress(){
+        const done=links.filter(a=>a.classList.contains('done')).length;
+        const total=links.length; const pct=Math.round(done/total*100);
+        progressText.textContent=`${pct}% tugallandi`;
       }
-      // click
-      links.forEach(a=>a.addEventListener("click",()=>setActive(a.getAttribute("href").slice(1))));
+
+      // click navigation
+      links.forEach((a)=>a.addEventListener('click',e=>{
+        const id=a.dataset.target; const el=document.getElementById(id);
+        if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'}); setActive(id); updatePager(); }
+      }));
+
       // scroll spy
-      const obs=new IntersectionObserver((entries)=>{
-        const hit=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-        if(hit) setActive(hit.target.id);
-      },{threshold:[0.6], rootMargin:"-80px 0px 0px 0px"});
-      ids.forEach(id=>{ const el=document.getElementById(id); if(el) obs.observe(el); });
+      const obs=new IntersectionObserver((ents)=>{
+        const hit=ents.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+        if(hit){ setActive(hit.target.id); updatePager(); }
+      },{threshold:[0.6], rootMargin:'-80px 0px 0px 0px'});
+      sections.forEach(s=>s && obs.observe(s));
+
+      // complete toggles current item as done
+      completeBtn.addEventListener('click',()=>{
+        const active=links.find(a=>a.classList.contains('active'));
+        if(active){ active.classList.toggle('done'); updateProgress(); }
+      });
+
+      // simple pager
+      function indexActive(){ return links.findIndex(a=>a.classList.contains('active')); }
+      function updatePager(){
+        const i=indexActive();
+        prevBtn.disabled = i<=0; nextBtn.disabled = i>=links.length-1;
+      }
+      prevBtn.addEventListener('click',()=>{ const i=indexActive(); if(i>0) links[i-1].click(); });
+      nextBtn.addEventListener('click',()=>{ const i=indexActive(); if(i<links.length-1) links[i+1].click(); });
+
+      updateProgress(); updatePager();
+
+      // Outside toggle for opening/closing the menu
+      function setToggleIcon(){
+        const open = !document.body.classList.contains('menu-closed');
+        globalToggle.setAttribute('aria-expanded', String(open));
+        globalToggle.innerHTML = open
+          ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+               <rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M9 4v16"></path>
+             </svg>`
+          : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+               <line x1="3" y1="6" x2="21" y2="6"></line>
+               <line x1="3" y1="12" x2="21" y2="12"></line>
+               <line x1="3" y1="18" x2="21" y2="18"></line>
+             </svg>`;
+      }
+      globalToggle.addEventListener('click',()=>{
+        document.body.classList.toggle('menu-closed');
+        setToggleIcon();
+      });
+      setToggleIcon();
     })();
   </script>
 </body>
