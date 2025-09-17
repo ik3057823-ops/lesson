@@ -6,8 +6,9 @@
     #lesson-embed{
       --primary:#13176C; --bg:#f7f7f9; --surface:#fff; --text:#1f2937; --muted:#6b7280; --border:#e5e7eb;
       --shadow:0 1px 2px rgba(0,0,0,.04);
-      --sidebar:320px;           /* menu width */
-      --bar-left:0px;            /* JS sets this to align bottom bar with menu line */
+      --sidebar:320px;            /* menu width */
+      --content-max:1100px;       /* centered content width */
+      --bar-left:0px;             /* JS sets this so bottom bar hugs menu line */
       font-family:"Inter",ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial,"Noto Sans","Liberation Sans",sans-serif;
       -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
       color:var(--text);
@@ -17,8 +18,7 @@
     /* Layout */
     #lesson-embed .le-app{
       display:grid; grid-template-columns:var(--sidebar) 1fr; min-height:60vh;
-      background:var(--surface); /* no outer border */
-      box-shadow:var(--shadow); overflow:hidden;
+      background:var(--surface); box-shadow:var(--shadow); overflow:hidden;
     }
     #lesson-embed.le-closed .le-app{grid-template-columns:0 1fr}
 
@@ -50,16 +50,16 @@
     }
 
     /* Content */
-    #lesson-embed .le-main{background:#fff; padding-bottom:96px;} /* reserve room for fixed nav */
-    /* Fill the available width; keep comfy side padding */
-    #lesson-embed .le-container{margin:0; padding:0 clamp(16px,4vw,32px)}
+    #lesson-embed .le-main{background:#fff; padding-bottom:96px;} /* room for fixed nav */
+    /* Centered content with left/right margins like previous version */
+    #lesson-embed .le-container{max-width:var(--content-max); margin:0 auto; padding:0 clamp(16px,4vw,32px)}
     #lesson-embed .le-top{border-bottom:1px solid var(--border);padding:18px 0 8px}
     #lesson-embed .le-crumb{color:var(--muted);font-size:.95rem;margin:0 0 8px}
     #lesson-embed .le-title{margin:0 0 10px;font-weight:700;letter-spacing:-.01em;font-size:clamp(24px,3vw,36px)}
     #lesson-embed .le-accent{height:4px;width:120px;background:var(--primary);border-radius:999px;margin:16px 0 0}
     #lesson-embed .le-section{border-top:1px solid var(--border);padding:24px 0}
     #lesson-embed .le-section h2{margin:0 0 10px;font-weight:700;font-size:1.45rem}
-    #lesson-embed .le-section p{margin:0 0 12px;color:#333}
+    #lesson-embed .le-section p{margin:0 0 12px;max-width:70ch;color:#333}
     #lesson-embed .le-lead{color:var(--muted)}
 
     /* Fixed bottom nav (sticks to menu line on left, page edge on right) */
@@ -69,6 +69,7 @@
       box-shadow:0 -6px 20px rgba(0,0,0,.06); z-index:9998;
     }
     #lesson-embed .le-bottom-inner{
+      max-width:var(--content-max); margin:0 auto;
       padding:12px clamp(16px,4vw,32px);
       display:flex; justify-content:space-between; gap:10px;
     }
@@ -84,7 +85,7 @@
     }
     #lesson-embed .le-toggle svg{width:18px;height:18px}
 
-    /* Responsive */
+    /* Responsive overlay sidebar */
     @media (max-width:900px){
       #lesson-embed .le-app{grid-template-columns:1fr}
       #lesson-embed .le-sidebar{position:fixed;left:0;top:0;width:var(--sidebar);height:100dvh;z-index:10}
@@ -168,7 +169,7 @@
         </ul>
       </div>
 
-      <!-- Fixed bottom nav -->
+      <!-- Fixed bottom nav (left hugs menu line, right to page edge) -->
       <div class="le-bottom">
         <div class="le-bottom-inner">
           <button class="le-btn" id="le-prev" type="button">← Oldingi</button>
@@ -179,7 +180,7 @@
     </main>
   </div>
 
-  <!-- Toggle on the menu/content border (nudged right) -->
+  <!-- Toggle on/beside the menu line -->
   <button class="le-toggle" id="le-toggle" aria-label="Menyuni ochish/yopish" aria-expanded="true"></button>
 
   <script>
@@ -220,14 +221,13 @@
 
       function placeToggleAndBar(){
         const rect=root.getBoundingClientRect();
+        const cs=getComputedStyle(root);
+        const padLeft=parseFloat(cs.paddingLeft)||0;  /* account for any outer padding if present later */
         const open=!root.classList.contains('le-closed');
         const overlay=isOverlay();
-        // When overlay (mobile), bar/toggle anchor to page left; otherwise to menu line
-        const leftBase = rect.left + window.scrollX + (overlay ? 0 : (open ? sidebarWidth() : 0));
-        // Bottom bar left
-        root.style.setProperty('--bar-left', leftBase + 'px');
-        // Toggle slightly to the RIGHT of the border
-        toggle.style.left = (leftBase + 14) + 'px';
+        const leftBase = rect.left + window.scrollX + padLeft + (overlay ? 0 : (open ? sidebarWidth() : 0));
+        root.style.setProperty('--bar-left', leftBase + 'px');      // bottom bar left
+        toggle.style.left = (leftBase + 14) + 'px';                  // toggle nudged right
       }
 
       function setToggleIcon(){
